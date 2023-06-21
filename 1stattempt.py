@@ -7,7 +7,7 @@ import skfuzzy as fuzz
 import skfuzzy.control as ctrl
 
 # Traffic light pins
-traffic_light_pins = [26, 25, 13]  # Green, Yellow, Red
+traffic_light_pins = [12, 25, 18]  # Green, Yellow, Red
 
 # Function to detect car volume using OpenCV
 def detect_car_volume(frame):
@@ -49,7 +49,7 @@ def detect_car_volume(frame):
 # Function to detect ambulance using MAX 4466 sound sensor
 def detect_ambulance():
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(15, GPIO.IN)  # Connect the OUT pin of MAX 4466 to GPIO 15
+    GPIO.setup(5, GPIO.IN)  # Connect the OUT pin of MAX 4466 to GPIO 15
 
     # Parameters for sound detection
     duration = 1  # Duration of sound detection in seconds
