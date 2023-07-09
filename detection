@@ -1,0 +1,43 @@
+import cv2
+import matplotlib.pyplot as plt
+import cvlib as cv
+import urllib.request
+import numpy as np
+from cvlib.object_detection import draw_bbox
+import concurrent.futures
+
+url = 'http://192.168.57.93/cam-hi.jpg'
+im=None
+
+def run2():
+    cv2.namedWindow("detection", cv2.WINDOW_AUTOSIZE)
+    while True:
+        img_resp = urllib.request.urlopen(url)
+        imgnp = np.array(bytearray(img_resp.read()), dtype=np.uint8)
+        im = cv2.imdecode(imgnp, -1)
+
+        bbox, label, conf = cv.detect_common_objects(im)
+        car_count = label.count('car')
+        truck_count = label.count('truck')
+        bus_count = label.count('bus')
+        motorcycle_count = label.count('motorcycle')
+        total_vehicles = car_count + truck_count + bus_count + motorcycle_count
+
+        im = draw_bbox(im, bbox, label, conf)
+
+        cv2.putText(im, f"Cars: {car_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(im, f"Trucks: {truck_count}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(im, f"Buses: {bus_count}", (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(im, f"Motorcycles: {motorcycle_count}", (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        cv2.putText(im, f"Total Vehicles: {total_vehicles}", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+        cv2.imshow('detection', im)
+        key = cv2.waitKey(5)
+        if key == ord('q'):
+            break
+
+    cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+    print("started")
+    run2()
